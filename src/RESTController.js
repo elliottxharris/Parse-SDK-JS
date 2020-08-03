@@ -216,6 +216,9 @@ const RESTController = {
     }
     url += path;
 
+    const token = localStorage.getItem('2FA_Token');
+    console.log(token);
+
     const payload = {};
     if (data && typeof data === 'object') {
       for (const k in data) {
