@@ -216,8 +216,23 @@ const RESTController = {
     }
     url += path;
 
-    const token = localStorage.getItem('2FA_Token');
-    console.log(token);
+    let shouldContinue = true;
+    const clientToken = localStorage.getItem('2FA_Token');
+    if (clientToken) {
+      CoreManager.getUserController().currentUserAsync().then((user) => {
+        const serverToken = user.get('token');
+
+        if (clientToken != serverToken) {
+          shouldContinue = false;
+        }
+      });
+    } else {
+      shouldContinue = false;
+    }
+
+    if (!shouldContinue) {
+      return
+    }
 
     const payload = {};
     if (data && typeof data === 'object') {
