@@ -219,25 +219,32 @@ const RESTController = {
     let shouldContinue = true;
     const clientToken = localStorage.getItem('2FA_Token');
     if (clientToken) {
-      CoreManager.getUserController().currentUserAsync()
-      .then((user) => {
-        const serverToken = user.get('token');
+      console.log('token:' + clientToken);
+      const userController = CoreManager.getUserController();
+      if (userController) {
+        CoreManager.getUserController().currentUserAsync()
+        .then((user) => {
+          const serverToken = user.get('token');
 
-        if (clientToken != serverToken) {
-          shouldContinue = false;
-        }
-      })
-      .catch((err) => {
-        if (err.message === 'Cannot read property \'then\' of undefined') {
-          shouldContinue = true;
-        }
-      });
+          if (clientToken != serverToken) {
+            shouldContinue = false;
+          } else {
+            console.log('should pass');
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      } else {
+        console.log('no userController');
+      }
     } else {
+      console.log('no client token');
       shouldContinue = false;
     }
 
     if (!shouldContinue) {
-      return
+      return Promise.reject();
     }
 
     const payload = {};
