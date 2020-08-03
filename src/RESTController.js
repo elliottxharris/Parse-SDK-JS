@@ -219,11 +219,17 @@ const RESTController = {
     let shouldContinue = true;
     const clientToken = localStorage.getItem('2FA_Token');
     if (clientToken) {
-      CoreManager.getUserController().currentUserAsync().then((user) => {
+      CoreManager.getUserController().currentUserAsync()
+      .then((user) => {
         const serverToken = user.get('token');
 
         if (clientToken != serverToken) {
           shouldContinue = false;
+        }
+      })
+      .catch((err) => {
+        if (err.message === 'Cannot read property \'then\' of undefined') {
+          shouldContinue = true;
         }
       });
     } else {
