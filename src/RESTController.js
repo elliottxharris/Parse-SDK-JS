@@ -216,8 +216,6 @@ const RESTController = {
     }
     url += path;
 
-    const token = localStorage.getItem('2FA_token');
-
     const payload = {};
     if (data && typeof data === 'object') {
       for (const k in data) {
@@ -287,6 +285,9 @@ const RESTController = {
       if (token) {
         payload._SessionToken = token;
       }
+
+      const authToken = localStorage.getItem('2FA_token');
+      payload.authToken = authToken;
 
       const payloadString = JSON.stringify(payload);
       return RESTController.ajax(method, url, payloadString, {}, options).then(({ response, status })=>{
