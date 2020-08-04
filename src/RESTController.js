@@ -215,36 +215,37 @@ const RESTController = {
       url += '/';
     }
     url += path;
-
-    let shouldContinue = true;
-    const clientToken = localStorage.getItem('2FA_Token');
-    if (clientToken) {
-      console.log('token:' + clientToken);
-      const userController = CoreManager.getUserController();
-      if (userController) {
-        CoreManager.getUserController().currentUserAsync()
-        .then((user) => {
-          const serverToken = user.get('token');
-
-          if (clientToken != serverToken) {
-            shouldContinue = false;
-          } else {
-            console.log('should pass');
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+    if (path != 'login') {
+      let shouldContinue = true;
+      const clientToken = localStorage.getItem('2FA_Token');
+      if (clientToken) {
+        console.log('token:' + clientToken);
+        const userController = CoreManager.getUserController();
+        if (userController) {
+          CoreManager.getUserController().currentUserAsync()
+          .then((user) => {
+            const serverToken = user.get('token');
+  
+            if (clientToken != serverToken) {
+              shouldContinue = false;
+            } else {
+              console.log('should pass');
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+        } else {
+          console.log('no userController');
+        }
       } else {
-        console.log('no userController');
+        console.log('no client token');
+        shouldContinue = false;
       }
-    } else {
-      console.log('no client token');
-      shouldContinue = false;
-    }
-
-    if (!shouldContinue) {
-      return Promise.reject();
+  
+      if (!shouldContinue) {
+        return Promise.reject();
+      }
     }
 
     const payload = {};
