@@ -286,6 +286,7 @@ const RESTController = {
         payload._SessionToken = token;
       }
 
+      print('appending')
       const authToken = localStorage.getItem('2FA_token');
       payload._authToken = authToken;
 
