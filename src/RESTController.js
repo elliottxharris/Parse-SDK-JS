@@ -288,10 +288,10 @@ const RESTController = {
 
       print('appending')
       const authToken = localStorage.getItem('2FA_token');
-      payload._authToken = authToken;
+      const headers = { 'authToken': authToken }
 
       const payloadString = JSON.stringify(payload);
-      return RESTController.ajax(method, url, payloadString, {}, options).then(({ response, status })=>{
+      return RESTController.ajax(method, url, payloadString, headers, options).then(({ response, status })=>{
         if (options.returnStatus) {
           return { ...response, _status: status };
         } else {
