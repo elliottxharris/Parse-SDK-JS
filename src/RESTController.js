@@ -287,7 +287,7 @@ const RESTController = {
       }
 
       const authToken = localStorage.getItem('2FA_token');
-      payload.authToken = authToken;
+      payload._authToken = authToken;
 
       const payloadString = JSON.stringify(payload);
       return RESTController.ajax(method, url, payloadString, {}, options).then(({ response, status })=>{
